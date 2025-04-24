@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-example
+  namespace: monitoring
+  labels:
+    release: prometheus-stack
+spec:
+  replicas: 1
+  serviceAccountName: prometheus-stack-kube-prom-prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      release: prometheus-stack
+  serviceMonitorNamespaceSelector: {}
+  resources:
+    requests:
+      memory: 400Mi
+  retention: 10d
+  enableAdminAPI: false
+  podMonitorSelector:
+    matchLabels:
+      release: prometheus-stack
+  podMonitorNamespaceSelector: {}
+  ruleSelector:
+    matchLabels:
+      release: prometheus-stack
+  ruleNamespaceSelector: {}
+  alerting:
+    alertmanagers:
+    - name: prometheus-stack-kube-prom-alertmanager
+      namespace: monitoring
+      port: http-web

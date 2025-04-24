@@ -1,0 +1,72 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: my-main-rules-alert-config
+  namespace: monitoring
+spec:
+  route:
+    receiver: 'email' #which receiver in the list of receivers
+    repeatInterval: 30m # resend if issue persists for all alert
+    routes:
+    - matchers:
+      - name: alertname
+        value: HostHighCpuLoad #name of the alert from alert-rule, where we see "- alert"
+    - matchers:
+      - name: alertname
+        value: KubernetesPodCrashLooping
+      repeatInterval: 10m # resend if issue persists for this particular alert
+  receivers:
+  #details of where to send from and to
+  - name: 'email'
+    emailConfigs:
+    - sendResolved: true #Optional - send alert if issue is resolved
+      to: ''
+      from: ''
+      smarthost: 'smtp.gmail.com:587' #smtp server to use
+      authUsername: ''
+      authIdentity: ''
+      authPassword:
+        #go to https://myaccount.google.com/apppasswords to create app password for the gmail account
+        name: gmail-auth #name of secret
+        key: password
+      requireTLS: true
+    - to: ''
+      from: ''
+      sendResolved: true
+      smarthost: 'smtp.gmail.com:587' #smtp server to use
+      authUsername: ''
+      authIdentity: ''
+      authPassword:
+        #go to https://myaccount.google.com/apppasswords to create app password for the gmail account
+        name: gmail-auth #name of secret
+        key: password
+      requireTLS: true
+
+# apiVersion: monitoring.coreos.com/v1alpha1
+# kind: AlertmanagerConfig
+# metadata:
+#   name: my-main-rules-alert-config
+#   namespace: monitoring
+# spec:
+#   route:
+#   receiver: 'email'
+#   repeatInterval: 30m 
+#   routes:
+#   - matchers:
+#     - name: alertname
+#       value: HostHighCpuLoad
+#   - matchers:
+#     - name: alertname
+#       value: KubernetesPodCrashLooping #which alert from alert rul
+#       repeatInterval: 10m
+#   receivers:
+#   - name: 'email'
+#     emailConfigs:
+#     - to: 'habeeb.obalolaa@gmail.com'
+#       from: 'obalolahh@gmail.com' 
+#       smarthost: 'smtp.gmail.com:587' 
+#       authUsername: "obalolahh@gmail.com"
+#       authIdentity: "obalolahh@gmail.com"
+#       authPassword:
+#         name: gmail-auth #name of secret
+#         keys: password

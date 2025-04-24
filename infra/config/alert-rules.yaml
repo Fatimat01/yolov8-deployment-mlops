@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: my-main-rules
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack #Prometheus looks for this label to pick the alert up
+    release: prometheus-stack #Prometheus looks for this label to pick the alert up #matchLabel scetion on Prometheus CRD
+spec:
+  groups:
+  - name: main.rules #this is the category it'll show on the UI Status/Rule health
+    rules:
+    #Array, we can create multiple alert rules
+    - alert: HostHighCpuLoad
+      expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) *100) > 50 #expression that needs to be met #when on UI, change unit on right side to (0-100)
+      for: 2m #how long to wait after expression is met before firing alert
+      labels:
+        severity: critical
+        namespace: monitoring
+      annotations:
+        description: "CPU load on host is over 50%
+
+          \ Value = {{ $value }}
+
+          \ Instance = {{ $labels.instance }}\n" #$labels.Instance gets the instance ID/name
+        summary: "Host CPU load is high"
+
+    - alert: KubernetesPodCrashLooping
+      expr: kube_pod_container_status_restarts_total > 5 #expr -- if container restart is more than 5
+      for: 0m #wait for how long before firing alert
+      labels:
+        severity: critical
+        namespace: monitoring
+      annotations:
+        description: "Pod {{ $labels.pod }} is crash looping
+
+          \ Value = {{ $value }}"
+        summary: "Kubernetes pod crash looping"

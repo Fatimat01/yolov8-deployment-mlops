@@ -1,0 +1,20 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: memory-stress-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    #what it should target
+    apiVersion: apps/v1
+    kind: Deployment
+    name: memory-stress # Must match your memory stress Deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 60

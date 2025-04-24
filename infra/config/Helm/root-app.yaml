@@ -1,0 +1,23 @@
+# root-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:obalola14/EKS-CICD.git'
+    path: Argo-Apps
+    directory:
+      recurse: true
+    targetRevision: master
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=false

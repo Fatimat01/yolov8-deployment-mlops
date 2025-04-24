@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-stress
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-stress
+  template:
+    metadata:
+      labels:
+        app: memory-stress
+    spec:
+      containers:
+      - name: stress
+        image: progrium/stress
+        args:
+        - "--vm"
+        - "1" # Launch 1 memory stress worker
+        - "--vm-bytes"
+        - "500M" # Each worker will allocate 500MB
+        - "--timeout"
+        - "600" # Run for 10 minutes
+        resources:
+          requests:
+            memory: "512Mi"
+          limits:
+            memory: "1Gi"

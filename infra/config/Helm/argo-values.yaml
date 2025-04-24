@@ -1,0 +1,27 @@
+#Configurin Argo CD from scratch to automatically create applications to manage
+#can also be done using values but values file is cleaner
+#This injects a root Argo CD application at install time via the Helm chart.
+
+# configs:
+#   applications:
+#   - |
+#     apiVersion: argoproj.io/v1alpha1
+#     kind: Application
+#     metadata:
+#       name: root-app
+#       namespace: argocd
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/obalola14/EKS-CICD
+#         path: Argo-Apps/
+#         targetRevision: master #Branch it targets
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: argocd
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
+#         syncOptions:
+#         - CreateNamespace=false

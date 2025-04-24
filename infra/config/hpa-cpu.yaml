@@ -1,0 +1,20 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cpu-stress-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    #what it should target
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cpu-stress # Must match your Deployment name
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization # Use percentage of requested CPU
+        averageUtilization: 50 # Target average CPU usage across pods

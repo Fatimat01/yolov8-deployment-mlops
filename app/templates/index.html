@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YOLOv8 Live Detection</title>
+  <style>
+    body { text-align: center; font-family: sans-serif; }
+    #video-container {
+      position: relative;
+      display: inline-block;
+    }
+    #webcam, #overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 640px;
+      height: 480px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>YOLOv8 Real-Time Object Detection</h1>
+  <div id="video-container">
+    <video id="webcam" autoplay muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <script src="/static/live.js"></script>
+</body>
+</html>
