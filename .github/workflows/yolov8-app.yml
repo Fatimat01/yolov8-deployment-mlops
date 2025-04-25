@@ -7,6 +7,7 @@ on:
       - 'app/**'
       - 'Dockerfile'
       - 'requirements.txt'
+      - '.github/workflows/yolov8-app.yml'
 
 jobs:
   build-and-deploy:

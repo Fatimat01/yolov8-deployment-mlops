@@ -3,11 +3,9 @@ name: Terraform EKS Deployment
 on:
   push:
     branches: [ "main" ]
-    paths-ignore: 
-      - 'infra/module/README.md'
     paths:
-      - 'infra/module/**'
-      - '.github/workflows/terraform-eks-deploy.yml'
+      - 'infra/module/*.tf'
+      - '.github/workflows/eks-tf.yml'
 
   workflow_dispatch:   # <<<<<< Manual trigger via GitHub UI
 
