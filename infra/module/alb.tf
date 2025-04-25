@@ -1,6 +1,3 @@
-
-
-
 module "alb" {
   depends_on                 = [module.eks, module.vpc]
   source                     = "terraform-aws-modules/alb/aws"

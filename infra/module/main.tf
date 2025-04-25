@@ -3,8 +3,6 @@ provider "aws" {
 }
 
 
-
-
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -37,48 +35,48 @@ module "eks" {
   subnet_ids = module.vpc.private_subnets
   vpc_id     = module.vpc.vpc_id
 
-  cluster_security_group_additional_rules = {
-    ingress_from_node = {
-      description                = "Allow node to communicate with control plane"
-      protocol                   = "tcp"
-      from_port                  = 10250
-      to_port                    = 10250
-      type                       = "ingress"
-      source_node_security_group = true
-    }
-  }
+  # cluster_security_group_additional_rules = {
+  #   ingress_from_node = {
+  #     description                = "Allow node to communicate with control plane"
+  #     protocol                   = "tcp"
+  #     from_port                  = 10250
+  #     to_port                    = 10250
+  #     type                       = "ingress"
+  #     source_node_security_group = true
+  #   }
+  # }
 
-  node_security_group_additional_rules = {
-    egress_all = {
-      description = "Allow all egress"
-      protocol    = "-1"
-      from_port   = 0
-      to_port     = 0
-      type        = "egress"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+  # node_security_group_additional_rules = {
+  #   egress_all = {
+  #     description = "Allow all egress"
+  #     protocol    = "-1"
+  #     from_port   = 0
+  #     to_port     = 0
+  #     type        = "egress"
+  #     cidr_blocks = ["0.0.0.0/0"]
+  #   }
 
-    alb_health_check = {
-      description = "Allow ALB health checks"
-      protocol    = "tcp"
-      from_port   = 80
-      to_port     = 80
-      type        = "ingress"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    alb_to_nodes = {
-      description = "Allow ALB to access YOLOv8 pods"
-      protocol    = "tcp"
-      from_port   = 30080
-      to_port     = 30080
-      type        = "ingress"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
+  #   alb_health_check = {
+  #     description = "Allow ALB health checks"
+  #     protocol    = "tcp"
+  #     from_port   = 80
+  #     to_port     = 80
+  #     type        = "ingress"
+  #     cidr_blocks = ["0.0.0.0/0"]
+  #   }
+  #   alb_to_nodes = {
+  #     description = "Allow ALB to access YOLOv8 pods"
+  #     protocol    = "tcp"
+  #     from_port   = 30080
+  #     to_port     = 30080
+  #     type        = "ingress"
+  #     cidr_blocks = ["0.0.0.0/0"]
+  #   }
+  # }
 
   enable_irsa = false
 
-  iam_role_arn = aws_iam_role.eks_cluster_role.arn
+  # iam_role_arn = aws_iam_role.eks_cluster_role.arn
   eks_managed_node_groups = {
     yolov8-ng = {
       ami_type       = "AL2_x86_64"
@@ -89,9 +87,6 @@ module "eks" {
       desired_size = 2
       iam_role_arn = aws_iam_role.eks_node_role.arn
     }
-    tags = {
-    Project = "YOLOv8-EKS"
-  }
   }
 
   tags = {
