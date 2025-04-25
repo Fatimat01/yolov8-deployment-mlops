@@ -1,0 +1,51 @@
+name: Terraform EKS Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore: 
+      - 'infra/module/README.md'
+    paths:
+      - 'infra/module/**'
+      - '.github/workflows/terraform-eks-deploy.yml'
+
+  workflow_dispatch:   # <<<<<< Manual trigger via GitHub UI
+
+jobs:
+  terraform:
+    name: Terraform Apply for EKS
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: infra/module  # <<<<<< Change to your Terraform module directory
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Format Check
+      run: terraform fmt -check
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+      run: terraform apply -auto-approve tfplan

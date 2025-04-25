@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: yolov8
-          image: atanda/yolov8-app:latest
+          image: atanda/yolov8:latest
           imagePullPolicy: Always
           ports:
             - name: http
