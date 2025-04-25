@@ -80,8 +80,7 @@ module "eks" {
 
   iam_role_arn = aws_iam_role.eks_cluster_role.arn
   eks_managed_node_groups = {
-    yolo-ng = {
-
+    yolov8-ng = {
       ami_type       = "AL2_x86_64"
       instance_types = ["t3.medium"]
 
@@ -90,6 +89,9 @@ module "eks" {
       desired_size = 2
       iam_role_arn = aws_iam_role.eks_node_role.arn
     }
+    tags = {
+    Project = "YOLOv8-EKS"
+  }
   }
 
   tags = {

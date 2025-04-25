@@ -1,0 +1,10 @@
+# tf state
+infra/module/*.tfstate
+infra/module/.terraform*
+*.tfstate.*
+*.tfvars
+*.tfvars.*
+*.tfplan
+# tf directory
+**.terraform/
+*.terraform**

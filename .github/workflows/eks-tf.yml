@@ -7,7 +7,16 @@ on:
       - 'infra/module/*.tf'
       - '.github/workflows/eks-tf.yml'
 
-  workflow_dispatch:   # <<<<<< Manual trigger via GitHub UI
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action to perform'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy   # <<<<<< Manual trigger via GitHub UI
 
 jobs:
   terraform:
@@ -42,8 +51,13 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan
+      if: ${{ github.event.inputs.action != 'destroy' }}
       run: terraform plan -out=tfplan
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+      if: github.event.inputs.action == 'apply' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
       run: terraform apply -auto-approve tfplan
+
+    - name: Terraform Destroy
+      if: github.event.inputs.action == 'destroy'
+      run: terraform destroy -auto-approve

@@ -1,4 +1,4 @@
-# YOLOv8 FastAPI Live Inference on EKS
+# YOLOv8 End-to-End Deployment (MLOps)
 
 This project implements a production-grade MLOps pipeline for **real-time object detection** using [YOLOv8](https://github.com/ultralytics/ultralytics) with a **live stream inference** backend built in **FastAPI**, deployed on **AWS EKS**, and automated with **GitHub Actions**. It is designed with scalability, observability, and ML tracking in mind.
 

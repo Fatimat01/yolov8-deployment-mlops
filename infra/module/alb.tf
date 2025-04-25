@@ -1,14 +1,4 @@
-data "aws_instances" "eks_nodes" {
-  filter {
-    name   = "tag:eks:nodegroup-name"
-    values = ["yolov8-ng"]
-  }
 
-  filter {
-    name   = "instance-state-name"
-    values = ["running"]
-  }
-}
 
 
 module "alb" {
@@ -44,31 +34,13 @@ module "alb" {
   }
 
   listeners = {
-    ex-http-https-redirect = {
+    http = {
       port     = 80
       protocol = "HTTP"
-      redirect = {
-        port        = "80"
-        protocol    = "HTTP"
-        status_code = "HTTP_301"
-      }
-
-      rules = {
-        ex-fixed-response = {
-          priority = 3
-          actions = [{
-            type         = "fixed-response"
-            content_type = "text/plain"
-            status_code  = 200
-            message_body = "This is a fixed response"
-          }]
-          conditions = [{
-            http_header = {
-              http_header_name = "Response"
-              values           = ["*"]
-            }
-          }]
-        }
+      fixed_response = {
+        content_type = "text/plain"
+        message_body = "Fixed message"
+        status_code  = "200"
       }
     }
   }
@@ -87,10 +59,18 @@ resource "aws_lb_target_group" "eks" {
   vpc_id      = module.vpc.vpc_id
 }
 
+data "aws_instances" "eks_nodes" {
+  filter {
+    name   = "tag:Name"
+    values = ["yolov8-ng"]
+  }
+
+}
+
 resource "aws_lb_target_group_attachment" "eks_node_attachments" {
-  for_each         = toset(data.aws_instances.eks_nodes.ids)
+  count =    length(data.aws_instances.eks_nodes.ids)
   target_group_arn = aws_lb_target_group.eks.arn
-  target_id        = each.value
+  target_id        = count.index
   port             = 30080
 
   depends_on = [module.alb, aws_lb_target_group.eks]

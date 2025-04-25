@@ -8,9 +8,11 @@ on:
       - 'Dockerfile'
       - 'requirements.txt'
       - '.github/workflows/yolov8-app.yml'
+  workflow_dispatch:   # <<<<<< Manual trigger via GitHub UI
 
 jobs:
-  build-and-deploy:
+
+  build-and-deploy-image:
     runs-on: ubuntu-latest
 
     env:
@@ -46,6 +48,13 @@ jobs:
     - name: Update kubeconfig for EKS
       run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
 
+    - name: Apply Kubernetes Manifests
+      run: |
+        kubectl apply -f infra/config/yolov8.yaml
+        kubectl apply -f infra/config/yolov8-service.yaml
+        kubectl rollout status deployment/yolov8
+        kubectl wait --for=condition=available --timeout=60s deployment/yolov8
+        
     - name: Update EKS Deployment with Latest Image
       run: |
         kubectl set image deployment/yolov8 yolov8=$IMAGE_NAME:latest
