@@ -56,8 +56,17 @@ jobs:
 
     - name: Terraform Apply
       if: github.event.inputs.action == 'apply' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+      id: apply
+      continue-on-error: true    # <<< Allow the job to continue even if apply fails
       run: terraform apply -auto-approve tfplan
 
+
+    - name: Auto Destroy on Apply Failure
+      if: steps.apply.outcome == 'failure'   # <<< Only run destroy if apply failed
+      run: |
+        echo "Terraform apply failed, starting destroy..."
+        terraform destroy -auto-approve
+        
     - name: Terraform Destroy
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve

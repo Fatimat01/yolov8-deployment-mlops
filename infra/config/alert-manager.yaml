@@ -41,32 +41,3 @@ spec:
         name: gmail-auth #name of secret
         key: password
       requireTLS: true
-
-# apiVersion: monitoring.coreos.com/v1alpha1
-# kind: AlertmanagerConfig
-# metadata:
-#   name: my-main-rules-alert-config
-#   namespace: monitoring
-# spec:
-#   route:
-#   receiver: 'email'
-#   repeatInterval: 30m 
-#   routes:
-#   - matchers:
-#     - name: alertname
-#       value: HostHighCpuLoad
-#   - matchers:
-#     - name: alertname
-#       value: KubernetesPodCrashLooping #which alert from alert rul
-#       repeatInterval: 10m
-#   receivers:
-#   - name: 'email'
-#     emailConfigs:
-#     - to: 'habeeb.obalolaa@gmail.com'
-#       from: 'obalolahh@gmail.com' 
-#       smarthost: 'smtp.gmail.com:587' 
-#       authUsername: "obalolahh@gmail.com"
-#       authIdentity: "obalolahh@gmail.com"
-#       authPassword:
-#         name: gmail-auth #name of secret
-#         keys: password
