@@ -38,24 +38,24 @@ jobs:
         docker build -t $IMAGE_NAME:latest .
         docker push $IMAGE_NAME:latest
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.REGION }}
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v2
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws-region: ${{ env.REGION }}
 
-    - name: Update kubeconfig for EKS
-      run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+    # - name: Update kubeconfig for EKS
+    #   run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
 
-    - name: Apply Kubernetes Manifests
-      run: |
-        kubectl apply -f infra/config/yolov8.yaml
-        kubectl apply -f infra/config/yolov8-service.yaml
-        kubectl rollout status deployment/yolov8
-        kubectl wait --for=condition=available --timeout=60s deployment/yolov8
+    # - name: Apply Kubernetes Manifests
+    #   run: |
+    #     kubectl apply -f infra/config/yolov8.yaml
+    #     kubectl apply -f infra/config/yolov8-service.yaml
+    #     kubectl rollout status deployment/yolov8
+    #     kubectl wait --for=condition=available --timeout=60s deployment/yolov8
         
-    - name: Update EKS Deployment with Latest Image
+    # - name: Update EKS Deployment with Latest Image
       run: |
         kubectl set image deployment/yolov8 yolov8=$IMAGE_NAME:latest
         kubectl rollout status deployment/yolov8
