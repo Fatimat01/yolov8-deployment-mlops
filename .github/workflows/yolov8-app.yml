@@ -56,6 +56,6 @@ jobs:
     #     kubectl wait --for=condition=available --timeout=60s deployment/yolov8
         
     # - name: Update EKS Deployment with Latest Image
-      run: |
-        kubectl set image deployment/yolov8 yolov8=$IMAGE_NAME:latest
-        kubectl rollout status deployment/yolov8
+      # run: |
+      #   kubectl set image deployment/yolov8 yolov8=$IMAGE_NAME:latest
+      #   kubectl rollout status deployment/yolov8
